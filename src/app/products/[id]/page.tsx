@@ -20,19 +20,21 @@ const product: ProductType = {
   },
 };
 
+// FIXED: params is a Promise
 export const generateMetadata = async ({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) => {
-  // TODO:get the product from db
-  // TEMPORARY
+  await params; // Just await it even if not using yet
+  // TODO: get the product from db using id when ready
   return {
     title: product.name,
-    describe: product.description,
+    description: product.description,
   };
 };
 
+// FIXED: Remove unused id
 const ProductPage = async ({
   params,
   searchParams,
@@ -40,10 +42,12 @@ const ProductPage = async ({
   params: Promise<{ id: string }>;
   searchParams: Promise<{ color: string; size: string }>;
 }) => {
+  await params; // Await but don't use (for future DB integration)
   const { size, color } = await searchParams;
 
   const selectedSize = size || (product.sizes[0] as string);
   const selectedColor = color || (product.colors[0] as string);
+  
   return (
     <div className="flex flex-col gap-4 lg:flex-row md:gap-12 mt-12">
       {/* IMAGE */}
